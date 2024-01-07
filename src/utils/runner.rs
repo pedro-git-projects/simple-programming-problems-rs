@@ -1,14 +1,16 @@
 use std::collections::HashMap;
 
+use super::exercises::Exercise;
+
 pub struct Runner {
-    exercises: HashMap<String, Box<dyn Fn()>>,
+    exercises: HashMap<String, Box<dyn Exercise>>,
 }
 
 impl Runner {
     pub fn add_exercise(
         &mut self,
         exercise_name: String,
-        exercise: Box<dyn Fn()>,
+        exercise: Box<dyn Exercise>,
     ) -> Result<bool, &'static str> {
         if self.exercises.contains_key(&exercise_name) {
             Err("Exercise with the same name already exists")
@@ -18,13 +20,12 @@ impl Runner {
         }
     }
 
-    pub fn run_exercise(&self, exercise_name: String) -> Result<(), String> {
-        match self.exercises.get(&exercise_name) {
-            Some(exercise) => {
-                exercise();
-                Ok(())
-            }
-            None => Err(format!("Exercise {} not found", exercise_name)),
+    pub fn run_exercise(&mut self, exercise_name: &str) -> Result<(), String> {
+        if let Some(exercise) = self.exercises.get_mut(exercise_name) {
+            exercise.run()?;
+            Ok(())
+        } else {
+            Err(format!("Exercise {} not found", exercise_name))
         }
     }
 
