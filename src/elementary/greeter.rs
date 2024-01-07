@@ -9,29 +9,18 @@ pub struct Greeter {
 }
 
 impl Greeter {
-    fn new() -> Result<Greeter, String> {
-        let mut g = Greeter {
-            reader: io::stdin(),
-            username: String::new(),
-            message: String::new(),
-        };
-
-        let mut username = String::new();
+    fn greet(&mut self) -> Result<(), String> {
         println!("Please enter your name!");
 
-        match g.reader.read_line(&mut username) {
+        match self.reader.read_line(&mut self.username) {
             Ok(_) => {
-                let trimmed_username = username.trim().to_string();
-                g.username = trimmed_username;
-                g.message = format!("Hello, {}! Nice to meet you", g.username);
-                Ok(g)
+                self.username = self.username.trim().to_string();
+                self.message = format!("Hello, {}! Nice to meet you", self.username);
+                println!("{}", self.message);
+                Ok(())
             }
             Err(err) => Err(format!("Failed to read name: {}", err)),
         }
-    }
-
-    fn greet(&self) {
-        println!("{}", self.message);
     }
 }
 
@@ -47,9 +36,7 @@ impl Default for Greeter {
 
 impl Exercise for Greeter {
     fn run(&mut self) -> Result<(), String> {
-        let greeter = Greeter::new()?;
-        greeter.greet();
-        *self = greeter;
+        self.greet()?;
         Ok(())
     }
 }
