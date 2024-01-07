@@ -2,7 +2,7 @@ mod elementary;
 mod utils;
 use std::io;
 
-use elementary::{alicebob::AliceAndBob, greeter::Greeter, hello::Hello};
+use elementary::{alicebob::AliceAndBob, greeter::Greeter, hello::Hello, sum::Sum};
 use utils::runner::Runner;
 
 fn main() -> Result<(), String> {
@@ -13,6 +13,7 @@ fn main() -> Result<(), String> {
         String::from("alice and bob"),
         Box::new(AliceAndBob::default()),
     )?;
+    runner.add_exercise(String::from("sum"), Box::new(Sum::default()))?;
 
     runner.print_messages();
 
